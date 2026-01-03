@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\ConferencesController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -16,6 +17,23 @@ Route::prefix('client')->name('client.')->group(function () {
 
     Route::post('/conferences/{id}/register', [ClientController::class, 'register'])->name('conferences.register');
 });
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// quick login buttons
+Route::post('/login/as-admin', [AuthController::class, 'loginAsAdmin'])->name('login.as_admin');
+Route::post('/login/as-employee', [AuthController::class, 'loginAsEmployee'])->name('login.as_employee');
+
 
 // Employee subsystem
 Route::prefix('employee')->name('employee.')->group(function () {

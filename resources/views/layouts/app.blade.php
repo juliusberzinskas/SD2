@@ -9,16 +9,26 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container">
-        <a class="navbar-brand" href="{{ route('home') }}">{{ __('app.app_title') }}</a>
+        <a class="navbar-brand" href="{{ route('login') }}">{{ __('app.app_title') }}</a>
 
         <div class="ms-auto d-flex align-items-center gap-3">
-            <span class="text-muted">
-                {{ session('current_user.first_name') }} {{ session('current_user.last_name') }}
-            </span>
 
-            <button class="btn btn-outline-secondary" disabled>
-                {{ __('app.nav.logout') }}
-            </button>
+            @php($auth = session('auth_user'))
+
+            @if($auth)
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-primary" href="{{ route('client.conferences.index') }}">
+                        {{ __('app.nav.client') }}
+                    </a>
+                    <a class="btn btn-outline-primary" href="{{ route('employee.conferences.index') }}">
+                        {{ __('app.nav.employee') }}
+                    </a>
+                    <a class="btn btn-outline-primary" href="{{ route('admin.index') }}">
+                        {{ __('app.nav.admin') }}
+                    </a>
+                </div>
+            @endif
+
         </div>
     </div>
 </nav>
