@@ -32,9 +32,9 @@ class AuthController extends Controller
         $users = session('users', []);
         $user = collect($users)->firstWhere('email', $data['email']);
 
-        if (!$user || !Hash::check($data['password'], $user['password'])) {
-            return back()->withErrors(['email' => 'Neteisingi prisijungimo duomenys.'])->withInput();
-        }
+        if (!$user || empty($user['password']) || !Hash::check($data['password'], $user['password'])) {
+        return back()->withErrors(['email' => 'Neteisingi prisijungimo duomenys.'])->withInput();
+    }
 
         session(['auth_user' => $user]);
 

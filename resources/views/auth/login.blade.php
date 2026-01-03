@@ -17,11 +17,6 @@
             <p class="text-muted mb-0">{{ __('app.auth.login_subtitle') }}</p>
         </div>
 
-
-            <h1 class="h3 mb-1">{{ __('app.auth.login_title') }}</h1>
-            <p class="text-muted mb-0">{{ __('app.auth.login_subtitle') }}</p>
-        </div>
-
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <form method="POST" action="{{ route('login.post') }}">
@@ -61,33 +56,6 @@
                         <a href="{{ route('register') }}">{{ __('app.auth.register_link') }}</a>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <div class="card mt-3">
-            <div class="card-body p-3">
-                <p class="text-muted mb-2 small">{{ __('app.auth.quick_login') }}</p>
-
-                <div class="d-grid gap-2">
-                    <form method="POST" action="{{ route('login.as_admin') }}">
-                        @csrf
-                        <button class="btn btn-outline-danger w-100" type="submit">
-                            {{ __('app.auth.login_as_admin') }}
-                        </button>
-                    </form>
-
-                    <form method="POST" action="{{ route('login.as_employee') }}">
-                        @csrf
-                        <button class="btn btn-outline-secondary w-100" type="submit">
-                            {{ __('app.auth.login_as_employee') }}
-                        </button>
-                    </form>
-                </div>
-
-                <div class="mt-3 small text-muted">
-                    <div><strong>Admin:</strong> admin@example.com / admin123</div>
-                    <div><strong>Employee:</strong> employee@example.com / employee123</div>
-                </div>
             </div>
         </div>
 
