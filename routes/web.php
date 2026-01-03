@@ -14,8 +14,7 @@ Route::prefix('client')->name('client.')->group(function () {
     Route::get('/conferences', [ClientController::class, 'index'])->name('conferences.index');
     Route::get('/conferences/{id}', [ClientController::class, 'show'])->name('conferences.show');
 
-    Route::post('/conferences/{id}/register', [ClientController::class, 'register'])
-        ->name('conferences.register');
+    Route::post('/conferences/{id}/register', [ClientController::class, 'register'])->name('conferences.register');
 });
 
 // Employee subsystem
