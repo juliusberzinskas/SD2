@@ -1,51 +1,98 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="mb-3">Prisijungimas</h1>
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+        <div class="text-center mb-4">
 
-<div class="card mb-3">
-    <div class="card-body">
-        <form method="POST" action="{{ route('login.post') }}">
-            @csrf
-
-            <div class="mb-3">
-                <label class="form-label">El. paštas</label>
-                <input type="email" name="email"
-                       class="form-control @error('email') is-invalid @enderror"
-                       value="{{ old('email') }}">
-                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <img src="{{ asset('images/logo.png') }}"
+                        alt="Logo"
+                        class="img-fluid"
+                        style="max-height: 200px;">
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Slaptažodis</label>
-                <input type="password" name="password"
-                       class="form-control @error('password') is-invalid @enderror">
-                @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            <h1 class="h3 mb-1">{{ __('app.auth.login_title') }}</h1>
+            <p class="text-muted mb-0">{{ __('app.auth.login_subtitle') }}</p>
+        </div>
+
+
+            <h1 class="h3 mb-1">{{ __('app.auth.login_title') }}</h1>
+            <p class="text-muted mb-0">{{ __('app.auth.login_subtitle') }}</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" action="{{ route('login.post') }}">
+                    @csrf
+
+                    <div class="form-floating mb-3">
+                        <input type="email"
+                               class="form-control @error('email') is-invalid @enderror"
+                               id="email"
+                               name="email"
+                               placeholder="name@example.com"
+                               value="{{ old('email') }}">
+                        <label for="email">{{ __('app.user.email') }}</label>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="password"
+                               class="form-control @error('password') is-invalid @enderror"
+                               id="password"
+                               name="password"
+                               placeholder="Password">
+                        <label for="password">{{ __('app.auth.password') }}</label>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button class="btn btn-primary w-100" type="submit">
+                        {{ __('app.auth.login_button') }}
+                    </button>
+
+                    <div class="text-center mt-3">
+                        <span class="text-muted">{{ __('app.auth.no_account') }}</span>
+                        <a href="{{ route('register') }}">{{ __('app.auth.register_link') }}</a>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <button class="btn btn-primary" type="submit">Prisijungti</button>
-            <a class="btn btn-link" href="{{ route('register') }}">Registracija</a>
-        </form>
-    </div>
-</div>
+        <div class="card mt-3">
+            <div class="card-body p-3">
+                <p class="text-muted mb-2 small">{{ __('app.auth.quick_login') }}</p>
 
-<div class="card">
-    <div class="card-body">
-        <p class="mb-2 text-muted">Greitas prisijungimas (be slaptažodžio):</p>
+                <div class="d-grid gap-2">
+                    <form method="POST" action="{{ route('login.as_admin') }}">
+                        @csrf
+                        <button class="btn btn-outline-danger w-100" type="submit">
+                            {{ __('app.auth.login_as_admin') }}
+                        </button>
+                    </form>
 
-        <form class="d-inline" method="POST" action="{{ route('login.as_admin') }}">
-            @csrf
-            <button class="btn btn-outline-danger" type="submit">Prisijungti kaip administratorius</button>
-        </form>
+                    <form method="POST" action="{{ route('login.as_employee') }}">
+                        @csrf
+                        <button class="btn btn-outline-secondary w-100" type="submit">
+                            {{ __('app.auth.login_as_employee') }}
+                        </button>
+                    </form>
+                </div>
 
-        <form class="d-inline" method="POST" action="{{ route('login.as_employee') }}">
-            @csrf
-            <button class="btn btn-outline-secondary" type="submit">Prisijungti kaip darbuotojas</button>
-        </form>
+                <div class="mt-3 small text-muted">
+                    <div><strong>Admin:</strong> admin@example.com / admin123</div>
+                    <div><strong>Employee:</strong> employee@example.com / employee123</div>
+                </div>
+            </div>
+        </div>
 
-        <div class="mt-3 text-muted">
-            Admin: admin@example.com / admin123<br>
-            Employee: employee@example.com / employee123
+        <div class="text-center mt-3 small text-muted">
+            © {{ date('Y') }} {{ __('app.app_title') }}
         </div>
     </div>
 </div>

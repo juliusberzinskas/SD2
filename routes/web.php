@@ -57,3 +57,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/conferences/{id}', [ConferencesController::class, 'update'])->name('conferences.update');
     Route::delete('/conferences/{id}', [ConferencesController::class, 'destroy'])->name('conferences.destroy');
 });
+
+// auth 
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/login/as-admin', [AuthController::class, 'loginAsAdmin'])->name('login.as_admin');
+    Route::post('/login/as-employee', [AuthController::class, 'loginAsEmployee'])->name('login.as_employee');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');

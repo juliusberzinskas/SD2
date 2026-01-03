@@ -34,8 +34,9 @@ class FakeDataStore
             ]);
         }
 
-        if (!session()->has('users')) {
-    session([
+
+    if (!session()->has('users')) {
+        session([
         'users' => [
             1 => [
                 'id' => 1,
@@ -52,10 +53,11 @@ class FakeDataStore
                 'email' => 'employee@example.com',
                 'role' => 'employee',
                 'password' => Hash::make('employee123'),
+                ],
             ],
-        ],
-    ]);
+        ]);
 }
+
 
         if (!session()->has('auth_user')) {
             session(['auth_user' => null]);

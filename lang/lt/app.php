@@ -11,6 +11,18 @@ return [
         'logout' => 'Logout',
     ],
 
+    'auth' => [
+        'login_title' => 'Prisijungimas',
+        'login_subtitle' => 'Prisijunkite prie sistemos.',
+        'password' => 'Slaptažodis',
+        'login_button' => 'Prisijungti',
+        'no_account' => 'Neturite paskyros?',
+        'register_link' => 'Registruotis',
+        'quick_login' => 'Greitas prisijungimas (be slaptažodžio):',
+        'login_as_admin' => 'Prisijungti kaip administratorius',
+        'login_as_employee' => 'Prisijungti kaip darbuotojas',
+],
+
     'common' => [
         'back' => 'Atgal',
         'none' => 'Nėra',
@@ -78,4 +90,13 @@ return [
         'confirm_button' => 'Taip, trinti',
         'cancel_button' => 'Atšaukti',
     ],
+
+    'client' => [
+    'subtitle' => 'Pasirinkite konferenciją ir užsiregistruokite.',
+    'details_subtitle' => 'Konferencijos informacija ir registracija.',
+    'conference_info' => 'Konferencijos informacija',
+    'no_conferences' => 'Šiuo metu konferencijų nėra.',
+    'register_hint' => 'Po registracijos darbuotojas matys jūsų įrašą konferencijos puslapyje.',
+],
+
 ];

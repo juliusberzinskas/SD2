@@ -54,7 +54,6 @@ class AuthController extends Controller
 
         $users = session('users', []);
 
-        // email unique
         $exists = collect($users)->firstWhere('email', $data['email']);
         if ($exists) {
             return back()->withErrors(['email' => 'Toks el. paštas jau egzistuoja.'])->withInput();
@@ -85,7 +84,7 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    // Quick login buttons
+    // OPTIONAL: quick login (jei nori palikti demo mygtukus)
     public function loginAsAdmin()
     {
         FakeDataStore::seed();
