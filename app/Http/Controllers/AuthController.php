@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FakeDataStore;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,41 +11,46 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        FakeDataStore::seed();
         return view('auth.login');
     }
 
     public function showRegister()
     {
-        FakeDataStore::seed();
         return view('auth.register');
     }
 
     public function login(Request $request)
     {
-        FakeDataStore::seed();
-
         $data = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $users = session('users', []);
-        $user = collect($users)->firstWhere('email', $data['email']);
+        $user = User::where('email', $data['email'])->first();
 
-        if (!$user || empty($user['password']) || !Hash::check($data['password'], $user['password'])) {
-        return back()->withErrors(['email' => 'Neteisingi prisijungimo duomenys.'])->withInput();
-    }
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            return back()
+                ->withErrors(['email' => 'Neteisingi prisijungimo duomenys.'])
+                ->withInput();
+        }
 
-        session(['auth_user' => $user]);
+        // nusistatome rolę (pirma role)
+        $role = $user->roles()->pluck('name')->first() ?? 'client';
 
-        return $this->redirectByRole($user['role']);
+        session([
+            'auth_user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $role,
+            ]
+        ]);
+
+        return $this->redirectByRole($role);
     }
 
     public function register(Request $request)
     {
-        FakeDataStore::seed();
-
         $data = $request->validate([
             'first_name' => ['required', 'string', 'min:2'],
             'last_name' => ['required', 'string', 'min:2'],
@@ -52,57 +58,81 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'min:4'],
         ]);
 
-        $users = session('users', []);
-
-        $exists = collect($users)->firstWhere('email', $data['email']);
+        // email unique (DB)
+        $exists = User::where('email', $data['email'])->exists();
         if ($exists) {
             return back()->withErrors(['email' => 'Toks el. paštas jau egzistuoja.'])->withInput();
         }
 
-        $id = empty($users) ? 1 : (max(array_keys($users)) + 1);
+        $fullName = trim($data['first_name'] . ' ' . $data['last_name']);
 
-        $newUser = [
-            'id' => $id,
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
+        $user = User::create([
+            'name' => $fullName,
             'email' => $data['email'],
-            'role' => 'client',
             'password' => Hash::make($data['password']),
-        ];
+        ]);
 
-        $users[$id] = $newUser;
-        session(['users' => $users, 'auth_user' => $newUser]);
+        // priskiriam client rolę
+        $clientRole = Role::firstOrCreate(['name' => 'client']);
+        $user->roles()->syncWithoutDetaching([$clientRole->id]);
 
-        return redirect()->route('client.conferences.index');
+        session([
+            'auth_user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => 'client',
+            ]
+        ]);
+
+        return redirect()->route('client.conferences.index')
+            ->with('success', 'Paskyra sukurta ir prisijungta.');
     }
 
     public function logout(Request $request)
     {
-        session(['auth_user' => null]);
+        session()->forget('auth_user');
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
     }
 
-    // OPTIONAL: quick login (jei nori palikti demo mygtukus)
     public function loginAsAdmin()
     {
-        FakeDataStore::seed();
-        $users = session('users', []);
-        $admin = collect($users)->firstWhere('role', 'admin');
+        $user = User::whereHas('roles', fn ($q) => $q->where('name', 'admin'))->first();
 
-        session(['auth_user' => $admin]);
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Admin vartotojas nerastas DB. Paleisk seeder.');
+        }
+
+        session([
+            'auth_user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => 'admin',
+            ]
+        ]);
 
         return redirect()->route('admin.index');
     }
 
     public function loginAsEmployee()
     {
-        FakeDataStore::seed();
-        $users = session('users', []);
-        $emp = collect($users)->firstWhere('role', 'employee');
+        $user = User::whereHas('roles', fn ($q) => $q->where('name', 'employee'))->first();
 
-        session(['auth_user' => $emp]);
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Employee vartotojas nerastas DB. Paleisk seeder.');
+        }
+
+        session([
+            'auth_user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => 'employee',
+            ]
+        ]);
 
         return redirect()->route('employee.conferences.index');
     }

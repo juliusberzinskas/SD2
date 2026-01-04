@@ -47,18 +47,18 @@ Route::prefix('admin')->name('admin.')
     });
 
 
-// auth
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    // auth
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-Route::post('/login/as-admin', [AuthController::class, 'loginAsAdmin'])->name('login.as_admin');
-Route::post('/login/as-employee', [AuthController::class, 'loginAsEmployee'])->name('login.as_employee');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+    Route::post('/login/as-admin', [AuthController::class, 'loginAsAdmin'])->name('login.as_admin');
+    Route::post('/login/as-employee', [AuthController::class, 'loginAsEmployee'])->name('login.as_employee');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/dev/reset', function () {
-    session()->flush();
-    return redirect()->route('login')->with('success', 'Session reset OK');
-});
+    Route::get('/dev/reset', function () {
+        session()->flush();
+        return redirect()->route('login')->with('success', 'Session reset OK');
+    });

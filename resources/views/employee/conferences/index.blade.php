@@ -17,14 +17,14 @@
     <tbody>
         @forelse($conferences as $conf)
             <tr>
-                <td>{{ $conf['id'] }}</td>
-                <td>{{ $conf['title'] }}</td>
-                <td>{{ $conf['date'] }}</td>
-                <td>{{ $conf['time'] }}</td>
-                <td>{{ $conf['address'] }}</td>
+                <td>{{ $conf->id }}</td>
+                <td>{{ $conf->title }}</td>
+                <td>{{ $conf->date }}</td>
+                <td>{{ $conf->time }}</td>
+                <td>{{ $conf->address }}</td>
                 <td class="text-end">
                     <a class="btn btn-sm btn-outline-primary"
-                       href="{{ route('employee.conferences.show', $conf['id']) }}">
+                       href="{{ route('employee.conferences.show', $conf->id) }}">
                         {{ __('app.conference.view') }}
                     </a>
                 </td>
