@@ -13,11 +13,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-    $middleware->alias([
-        'auth.session' => EnsureAuthenticated::class,
-        'role' => EnsureRole::class,
-    ]);
-})
-    ->withExceptions(function (Exceptions $exceptions): void {
+        $middleware->alias([
+            'auth.session' => \App\Http\Middleware\EnsureAuthenticated::class,
+            'role' => \App\Http\Middleware\EnsureRole::class,
+            'guest.session' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        ]);
+    })
+    ->withExceptions(function ($exceptions) {
         //
     })->create();

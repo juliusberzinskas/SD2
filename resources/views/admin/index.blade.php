@@ -5,6 +5,14 @@
     <div class="card-body">
         <h1 class="mb-3">{{ __('app.admin.title') ?? 'Administratoriaus posistemis' }}</h1>
 
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
         <div class="d-flex gap-2 flex-wrap">
             <a class="btn btn-primary" href="{{ route('admin.users.index') }}">
                 {{ __('app.admin.manage_users') ?? 'Naudotojų valdymas' }}

@@ -1,24 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="mb-3">{{ __('app.home.title') }}</h1>
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-1">Sveiki, {{ $auth['name'] ?? 'Vartotojau' }}!</h1>
+                <p class="text-muted mb-4">
+                    Pasirinkite posistemį pagal savo rolę.
+                </p>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">{{ __('app.home.student') }}</h5>
-        <ul class="mb-0">
-            <li>{{ __('app.home.name') }}: {{ $student['first_name'] }}</li>
-            <li>{{ __('app.home.surname') }}: {{ $student['last_name'] }}</li>
-            <li>{{ __('app.home.group') }}: {{ $student['group'] }}</li>
-        </ul>
+                <div class="d-flex gap-2 flex-wrap">
+                    @if($role === 'client')
+                        <a class="btn btn-primary" href="{{ route('client.conferences.index') }}">
+                            Eiti į Kliento posistemį
+                        </a>
+                    @endif
+
+                    @if($role === 'employee')
+                        <a class="btn btn-secondary" href="{{ route('employee.conferences.index') }}">
+                            Eiti į Darbuotojo posistemį
+                        </a>
+                    @endif
+
+                    @if($role === 'admin')
+                        <a class="btn btn-danger" href="{{ route('admin.index') }}">
+                            Eiti į Administratoriaus posistemį
+                        </a>
+
+                        <a class="btn btn-outline-primary" href="{{ route('client.conferences.index') }}">
+                            Klientas (admin)
+                        </a>
+
+                        <a class="btn btn-outline-secondary" href="{{ route('employee.conferences.index') }}">
+                            Darbuotojas (admin)
+                        </a>
+                    @endif
+                </div>
+
+                <hr class="my-4">
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-secondary" type="submit">
+                        Atsijungti
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
-
-<h5 class="mb-2">{{ __('app.home.subsystems') }}</h5>
-<div class="d-flex gap-2 flex-wrap">
-    //dwad
-    <a class="btn btn-primary" href="{{ route('client.conferences.index') }}">{{ __('app.nav.client') }}</a>
-    <a class="btn btn-primary" href="{{ route('employee.conferences.index') }}">{{ __('app.nav.employee') }}</a>
-    <a class="btn btn-primary" href="{{ route('admin.index') }}">{{ __('app.nav.admin') }}</a>
 </div>
 @endsection
