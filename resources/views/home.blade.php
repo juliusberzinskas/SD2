@@ -16,6 +16,7 @@
 
 <h5 class="mb-2">{{ __('app.home.subsystems') }}</h5>
 <div class="d-flex gap-2 flex-wrap">
+    //dwad
     <a class="btn btn-primary" href="{{ route('client.conferences.index') }}">{{ __('app.nav.client') }}</a>
     <a class="btn btn-primary" href="{{ route('employee.conferences.index') }}">{{ __('app.nav.employee') }}</a>
     <a class="btn btn-primary" href="{{ route('admin.index') }}">{{ __('app.nav.admin') }}</a>
