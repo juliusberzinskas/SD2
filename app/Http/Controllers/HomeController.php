@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FakeDataStore;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        FakeDataStore::seed();
+        $auth = session('auth_user');
 
-        return view('home', [
-            'user' => session('current_user'),
-            'student' => [
-                'first_name' => 'TAVO_VARDAS',
-                'last_name' => 'TAVO_PAVARDĖ',
-                'group' => 'TAVO_GRUPĖ',
-            ],
-        ]);
+        // jei neprisijungęs -> į login
+        if (!$auth) {
+            return redirect()->route('login');
+        }
+
+        $role = $auth['role'] ?? 'client';
+
+        return view('home', compact('auth', 'role'));
     }
 }

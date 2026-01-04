@@ -36,22 +36,31 @@ class ClientController extends Controller
     }
 
     public function register(int $id)
-    {
-        $conference = Conference::findOrFail($id);
+{
+    $conference = Conference::findOrFail($id);
 
-        $auth = session('auth_user');
-        if (!$auth) {
-            return redirect()->route('login')->with('error', 'Prašome prisijungti.');
-        }
+    $auth = session('auth_user');
+    if (!$auth) {
+        return redirect()->route('login')->with('error', 'Prašome prisijungti.');
+    }
 
-        // DB user objektas
-        $user = User::findOrFail($auth['id']);
+    $user = User::findOrFail($auth['id']);
 
-        // pridedam į pivot (jei jau yra - nedubliuos)
-        $user->conferences()->syncWithoutDetaching([$conference->id]);
+    // jei jau yra — pranešam ir nieko nedarom
+    $alreadyRegistered = $conference->users()
+        ->where('users.id', $user->id)
+        ->exists();
 
+    if ($alreadyRegistered) {
         return redirect()
             ->route('client.conferences.show', $conference->id)
-            ->with('success', 'Sėkmingai užsiregistravote į konferenciją!');
+            ->with('success', 'Jūs jau esate užsiregistravęs į šią konferenciją.');
     }
+
+    $user->conferences()->attach($conference->id);
+
+    return redirect()
+        ->route('client.conferences.show', $conference->id)
+        ->with('success', 'Sėkmingai užsiregistravote į konferenciją!');
+}
 }

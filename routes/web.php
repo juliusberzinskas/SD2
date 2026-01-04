@@ -7,8 +7,11 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\ConferencesController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->middleware('auth.session')
+    ->name('home');
 
 // Client subsystem (leidžiam client ir admin)
 Route::prefix('client')->name('client.')
@@ -48,17 +51,25 @@ Route::prefix('admin')->name('admin.')
 
 
     // auth
+    Route::middleware('guest.session')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-    Route::post('/login/as-admin', [AuthController::class, 'loginAsAdmin'])->name('login.as_admin');
-    Route::post('/login/as-employee', [AuthController::class, 'loginAsEmployee'])->name('login.as_employee');
-
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    Route::get('/dev/reset', function () {
-        session()->flush();
-        return redirect()->route('login')->with('success', 'Session reset OK');
     });
+
+    // logout
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->middleware('auth.session')
+        ->name('logout');
+
+    // demo
+    Route::post('/login/as-admin', [AuthController::class, 'loginAsAdmin'])
+        ->middleware('guest.session')
+        ->name('login.as_admin');
+
+    Route::post('/login/as-employee', [AuthController::class, 'loginAsEmployee'])
+        ->middleware('guest.session')
+        ->name('login.as_employee');
+

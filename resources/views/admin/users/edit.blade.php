@@ -5,28 +5,17 @@
 
 <div class="card">
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.users.update', $user['id']) }}">
+        <form method="POST" action="{{ route('admin.users.update', $user->id) }}">
             @csrf
             @method('PUT')
 
             <div class="mb-3">
-                <label class="form-label">{{ __('app.user.first_name') }}</label>
+                <label class="form-label">Vardas ir pavardė</label>
                 <input type="text"
-                       name="first_name"
-                       class="form-control @error('first_name') is-invalid @enderror"
-                       value="{{ old('first_name', $user['first_name']) }}">
-                @error('first_name')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">{{ __('app.user.last_name') }}</label>
-                <input type="text"
-                       name="last_name"
-                       class="form-control @error('last_name') is-invalid @enderror"
-                       value="{{ old('last_name', $user['last_name']) }}">
-                @error('last_name')
+                       name="name"
+                       class="form-control @error('name') is-invalid @enderror"
+                       value="{{ old('name', $user->name) }}">
+                @error('name')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
@@ -36,8 +25,23 @@
                 <input type="email"
                        name="email"
                        class="form-control @error('email') is-invalid @enderror"
-                       value="{{ old('email', $user['email']) }}">
+                       value="{{ old('email', $user->email) }}">
                 @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Rolė</label>
+                <select name="role_id" class="form-select @error('role_id') is-invalid @enderror">
+                    @foreach($roles as $r)
+                        <option value="{{ $r->id }}"
+                            @selected(old('role_id', $currentRole) == $r->id)>
+                            {{ strtoupper($r->name) }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('role_id')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
