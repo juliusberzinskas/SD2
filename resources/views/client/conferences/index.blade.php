@@ -34,14 +34,14 @@
                 <tbody>
                     @forelse($conferences as $conf)
                         <tr>
-                            <td class="ps-3">{{ $conf['id'] }}</td>
-                            <td class="fw-semibold">{{ $conf['title'] }}</td>
-                            <td><span class="badge bg-light text-dark">{{ $conf['date'] }}</span></td>
-                            <td><span class="badge bg-light text-dark">{{ $conf['time'] }}</span></td>
-                            <td class="text-muted">{{ $conf['address'] }}</td>
+                            <td class="ps-3">{{ $conf->id }}</td>
+                            <td class="fw-semibold">{{ $conf->title }}</td>
+                            <td><span class="badge bg-light text-dark">{{ $conf->date }}</span></td>
+                            <td><span class="badge bg-light text-dark">{{ $conf->time }}</span></td>
+                            <td class="text-muted">{{ $conf->address }}</td>
                             <td class="text-end pe-3">
                                 <a class="btn btn-sm btn-primary"
-                                   href="{{ route('client.conferences.show', $conf['id']) }}">
+                                   href="{{ route('client.conferences.show', $conf->id) }}">
                                     {{ __('app.conference.view') }}
                                 </a>
                             </td>

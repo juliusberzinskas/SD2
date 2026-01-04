@@ -87,9 +87,9 @@
             {{-- Dešinė pusė: vartotojas + logout arba login/register --}}
             <div class="ms-2 d-flex align-items-center gap-2">
                 @if($auth)
-                    <span class="text-muted small d-none d-md-inline">
-                        {{ $auth['first_name'] }} {{ $auth['last_name'] }}
-                    </span>
+                <span class="text-muted small d-none d-md-inline">
+                    {{ $auth['name'] ?? $auth['email'] ?? 'User' }}
+                </span>
 
                     <form method="POST" action="{{ route('logout') }}" class="d-inline">
                         @csrf

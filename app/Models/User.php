@@ -45,4 +45,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(\App\Models\Role::class, 'users_roles')->withTimestamps();
+    }
+
+    public function conferences()
+    {
+        return $this->belongsToMany(\App\Models\Conference::class, 'users_conferences')->withTimestamps();
+    }
 }

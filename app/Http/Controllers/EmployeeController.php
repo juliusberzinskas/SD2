@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FakeDataStore;
+use App\Models\Conference;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        FakeDataStore::seed();
-        $conferences = session('conferences');
+        $conferences = Conference::orderBy('date', 'asc')
+            ->orderBy('time', 'asc')
+            ->get();
 
         return view('employee.conferences.index', compact('conferences'));
     }
 
     public function show(int $id)
     {
-        FakeDataStore::seed();
-
-        $conference = session('conferences')[$id] ?? abort(404);
-        $registrations = session('registrations');
-        $clients = $registrations[$id] ?? [];
+        $conference = Conference::with(['users'])->findOrFail($id);
+        $clients = $conference->users;
 
         return view('employee.conferences.show', compact('conference', 'clients'));
     }

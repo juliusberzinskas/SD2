@@ -2,45 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FakeDataStore;
-use Illuminate\Http\Request;
+use App\Models\Conference;
+use App\Models\User;
 
 class ClientController extends Controller
 {
     public function index()
     {
-        FakeDataStore::seed();
-        $conferences = session('conferences');
+        $conferences = Conference::orderBy('date', 'asc')
+            ->orderBy('time', 'asc')
+            ->get();
 
         return view('client.conferences.index', compact('conferences'));
     }
 
     public function show(int $id)
     {
-        FakeDataStore::seed();
-        $conference = session('conferences')[$id] ?? abort(404);
+        $conference = Conference::findOrFail($id);
 
-        return view('client.conferences.show', compact('conference'));
+        // pasiimam prisijungusį user iš session (kol dar nenaudojam Laravel Auth)
+        $auth = session('auth_user');
+
+        // ar šitas user jau užsiregistravęs į šią konferenciją
+        $alreadyRegistered = false;
+
+        if ($auth) {
+            $alreadyRegistered = $conference->users()
+                ->where('users.id', $auth['id'])
+                ->exists();
+        }
+
+        return view('client.conferences.show', compact('conference', 'alreadyRegistered'));
     }
 
-    public function register(Request $request, int $id)
+    public function register(int $id)
     {
-        FakeDataStore::seed();
+        $conference = Conference::findOrFail($id);
 
-        $conference = session('conferences')[$id] ?? abort(404);
+        $auth = session('auth_user');
+        if (!$auth) {
+            return redirect()->route('login')->with('error', 'Prašome prisijungti.');
+        }
 
-        // minimal validation
-        $data = $request->validate([
-            'name' => ['required', 'string', 'min:3'],
-            'email' => ['required', 'email'],
-        ]);
+        // DB user objektas
+        $user = User::findOrFail($auth['id']);
 
-        $registrations = session('registrations');
-        $registrations[$id] = $registrations[$id] ?? [];
-        $registrations[$id][] = $data;
+        // pridedam į pivot (jei jau yra - nedubliuos)
+        $user->conferences()->syncWithoutDetaching([$conference->id]);
 
-        session(['registrations' => $registrations]);
-
-        return redirect()->route('client.conferences.show', $id);
+        return redirect()
+            ->route('client.conferences.show', $conference->id)
+            ->with('success', 'Sėkmingai užsiregistravote į konferenciją!');
     }
 }
